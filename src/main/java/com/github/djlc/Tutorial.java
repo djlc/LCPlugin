@@ -55,55 +55,6 @@ public final class Tutorial extends JavaPlugin {
 			}
 		}
 
-		// 1辺nブロックの中の詰まった立方体を任意の固体ブロックで作成する.
-		if (cmd.getName().equalsIgnoreCase("cube")) {
-
-			// Playerからのコマンドか？
-			if (sender instanceof Player) {
-				Player p = (Player) sender;
-
-				// 引数の個数が5個ちょうどなら
-				if (args.length == 5) {
-					int n = Integer.parseInt(args[0]);
-					int x = Integer.parseInt(args[1]);
-					int y = Integer.parseInt(args[2]);
-					int z = Integer.parseInt(args[3]);
-					Material m = Material.getMaterial(args[4]);
-
-					// 指定したMaterialがBlockなら
-					if (m.isBlock()) {
-						Location l = p.getLocation().add(x, y, z);
-
-						// 料金が足りているか？
-						double price = n * n * n;
-						if (econ.getBalance(p) >= price) {
-							// 支払い
-							EconomyResponse er = econ.withdrawPlayer(p, price);
-							if (er.transactionSuccess()) {
-								sender.sendMessage("$" + er.amount + " was removed.");
-								// 立方体を作成
-								new Cube(l, n, m);
-								sender.sendMessage(ChatColor.AQUA + "filled " + n * n * n + " blocks.");
-							} else {
-								sender.sendMessage("An error occured: " + er.errorMessage);
-							}
-						} else {
-							sender.sendMessage(ChatColor.RED + "You can't afford this!");
-						}
-					} else {
-						sender.sendMessage(ChatColor.RED + "This is not BLOCK!");
-					}
-					return true;
-				} else {
-					sender.sendMessage(ChatColor.RED + "Wrong Arguments!");
-				}
-			} else {
-				getLogger().info(ChatColor.RED + "Please run this command in game.");
-				return true;
-			}
-		}
-
-
 		return false;
 	}
 }
