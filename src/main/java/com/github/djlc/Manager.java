@@ -1,5 +1,5 @@
 package com.github.djlc;
 
-public class Pay {
+public class Manager {
 
 }

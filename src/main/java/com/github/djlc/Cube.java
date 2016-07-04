@@ -7,16 +7,17 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import net.milkbowl.vault.economy.EconomyResponse;
 
 public class Cube implements CommandExecutor {
 
-	private final Tutorial instance;
+	private final LCPlugin plugin;
 
-	public Cube(Tutorial instance) {
-		this.instance = instance;
+	public Cube(LCPlugin plugin) {
+		this.plugin = plugin;
 	}
 
 	private void create(Location l, int n, Material m) {
@@ -42,30 +43,85 @@ public class Cube implements CommandExecutor {
 			if (sender instanceof Player) {
 				p = (Player) sender;
 			} else {
-				instance.getLogger().info(ChatColor.RED + "Please run this command in game.");
+				plugin.getLogger().info(ChatColor.RED + "Please run this command in game.");
 				return true;
 			}
 			// 引数の個数が5個ちょうどなら
 			if (args.length == 5) {
+
+				// 辺の長さ
 				int n = Integer.parseInt(args[0]);
+
+				// 相対座標
 				int x = Integer.parseInt(args[1]);
 				int y = Integer.parseInt(args[2]);
 				int z = Integer.parseInt(args[3]);
+
+				// ブロック
 				Material m = Material.getMaterial(args[4]);
+				// nullなら名前が間違っていると通知
+				if (m == null) {
+					sender.sendMessage(ChatColor.RED + "Block name is wrong!");
+					return true;
+				}
 
 				// 指定したMaterialがBlockなら
 				if (m.isBlock()) {
 					Location l = p.getLocation().add(x, y, z);
 
+					// プレイヤーのインベントリ
+					PlayerInventory pi = p.getInventory();
+					// スタック
+					ItemStack is = null;
+					int cnt = 0;
+					for (int i=0; i<pi.getSize(); i++) {
+						is = pi.getItem(i);
+						if (is != null && is.getType().equals(m)) cnt += is.getAmount();
+					}
+
+					// 個数が足りているか？
+					int num = n * n * n;
+					if (cnt < num) {
+						sender.sendMessage(ChatColor.RED + "You don't have enough Blocks!");
+						return true;
+					}
+
 					// 料金が足りているか？
-					double price = n * n * n;
-					if (Tutorial.econ.getBalance(p) >= price) {
+					double price = num;
+					if (LCPlugin.econ.getBalance(p) >= price) {
 						// 支払い
-						EconomyResponse er = Tutorial.econ.withdrawPlayer(p, price);
+						EconomyResponse er = LCPlugin.econ.withdrawPlayer(p, price);
 						if (er.transactionSuccess()) {
+							// 支払い通知
 							sender.sendMessage("$" + er.amount + " was removed.");
+							// 必要個数のブロックをインベントリから差し引く
+							int id = 0;
+							while(num > 0) {
+								// 対象のブロックが来るまでループを回す
+								while(true) {
+									is = pi.getItem(id);
+									if (is != null && is.getType().equals(m)) {
+										break;
+									} else {
+										id++;
+									}
+								}
+
+								// 対象のブロックをインベントリから差し引く
+								if (num >= is.getAmount()) {
+									num -= is.getAmount();
+									pi.setItem(id, null);
+								} else {
+									pi.setItem(id, new ItemStack(m, is.getAmount() - num));
+									sender.sendMessage("Finished");
+									num = 0;
+								}
+							}
+							// インベントリの更新
+							p.updateInventory();
 							// 立方体を作成
 							create(l, n, m);
+							// 使用したブロックの個数を通知
 							sender.sendMessage(ChatColor.AQUA + "filled " + n * n * n + " blocks.");
 						} else {
 							sender.sendMessage("An error occured: " + er.errorMessage);

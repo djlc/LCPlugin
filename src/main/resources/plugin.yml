@@ -1,16 +1,11 @@
-name: TutorialPlugin
-main: com.github.djlc.Tutorial
+name: LCPlugin
+main: com.github.djlc.LCPlugin
 version: 0.0.1
 depend: [Vault]
 
 commands:
-  basic:
-    description: Demo Command.
-    usage: /<command> [player]
-    permission: tutorial.basic
-    permission-message: You don't have <permission>
   cube:
     description: Create a n^3 cube by setting relative coordinate.
     usage: /<command> [Size] [X] [Y] [Z] [Block Name]
-    permission: tutorial.cube
+    permission: lcplugin.cube
     permission-message: You don't have <permission>
