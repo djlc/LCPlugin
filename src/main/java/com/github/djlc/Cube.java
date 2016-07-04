@@ -113,7 +113,6 @@ public class Cube implements CommandExecutor {
 									pi.setItem(id, null);
 								} else {
 									pi.setItem(id, new ItemStack(m, is.getAmount() - num));
-									sender.sendMessage("Finished");
 									num = 0;
 								}
 							}
