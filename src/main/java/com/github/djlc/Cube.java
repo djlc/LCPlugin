@@ -41,13 +41,19 @@ public class Cube implements CommandExecutor, Listener {
 			this.material		= material;
 			this.materialData	= materialData;
 		}
+		
+		public Stats(int size, Material material) {
+			this.size			= size;
+			this.num			= size * size * size;
+			this.material		= material;
+		}
 	}
 	
 	// 本体
 	private final LCPlugin plugin;
 	
 	// ユーザーを登録するリスト
-	private static HashMap<Player, Stats> list;
+	private static HashMap<Player, Stats> list = new HashMap<Player, Stats>();
 
 	public Cube(LCPlugin plugin) {
 		this.plugin = plugin;
@@ -64,7 +70,10 @@ public class Cube implements CommandExecutor, Listener {
 			stats.location = event.getBlock().getLocation().add(0, 1, 0);
 			
 			// 支払い処理して
-			if (!pay(event.getPlayer())) return;
+			if (!pay(event.getPlayer())) {
+				// 失敗したら中止してイベントキャンセル
+				return;
+			}
 			
 			// インベントリ内のブロックを差し引いて
 			removeItems(event.getPlayer());
@@ -219,10 +228,8 @@ public class Cube implements CommandExecutor, Listener {
 				return true;
 			}
 			
-			sender.sendMessage(ChatColor.AQUA + "OK.");
-			
 			// プレイヤーを登録
-			list.put(player, new Stats(size, material, null));
+			list.put(player, new Stats(size, material));
 			
 			// プレイヤーが次にすべき操作を通知
 			sender.sendMessage(ChatColor.AQUA + "Please LEFT CLICK where you want to place the cube.");
