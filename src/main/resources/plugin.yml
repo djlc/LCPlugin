@@ -5,7 +5,7 @@ depend: [Vault]
 
 commands:
   cube:
-    description: Create a n^3 cube by setting relative coordinate. It costs $n^3.
-    usage: /<command> [Size] [X] [Y] [Z] [Block Name]
+    description: Create a n^3 cube. It costs $n^3.
+    usage: /<command> [Size] [Block Name]
     permission: lcplugin.cube
     permission-message: You don't have <permission>
