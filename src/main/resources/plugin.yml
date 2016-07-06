@@ -5,7 +5,7 @@ depend: [Vault]
 
 commands:
   cube:
-    description: Create a n^3 cube. It costs $n^3.
-    usage: /<command> [Size] [Block Name]
+    description: Create a n^3 cube by your hand's Blocks. It costs $n^3.
+    usage: /<command> [Size]
     permission: lcplugin.cube
     permission-message: You don't have <permission>
