@@ -35,18 +35,11 @@ public class Cube implements CommandExecutor, Listener {
 		// 座標
 		private Location location = null;
 
-		@SuppressWarnings("unused")
 		public Stats(int size, Material material, MaterialData materialData) {
 			this.size			= size;
 			this.num			= size * size * size;
 			this.material		= material;
 			this.materialData	= materialData;
-		}
-
-		public Stats(int size, Material material) {
-			this.size			= size;
-			this.num			= size * size * size;
-			this.material		= material;
 		}
 	}
 
@@ -166,10 +159,10 @@ public class Cube implements CommandExecutor, Listener {
 		p.updateInventory();
 	}
 
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
 		// 1辺nブロックの中の詰まった立方体を任意の固体ブロックで作成する.
-		if (cmd.getName().equalsIgnoreCase("cube")) {
+		if (command.getName().equalsIgnoreCase("cube")) {
 
 			// プレイヤー
 			Player player = null;
@@ -197,14 +190,10 @@ public class Cube implements CommandExecutor, Listener {
 			int size = Integer.parseInt(args[0]);
 
 			// ブロック
-			//Material material = player.get
-			//MaterialData materialData =
-
-			// nullなら名前が間違っていると通知
-			if (material == null) {
-				sender.sendMessage(ChatColor.RED + "Block name is wrong!");
-				return true;
-			}
+			Material material = player.getInventory().getItemInMainHand().getType();
+			sender.sendMessage(material.toString());
+			MaterialData materialData = player.getInventory().getItemInMainHand().getData();
+			sender.sendMessage(materialData.toString());
 
 			// ブロックでないなら通知
 			if (!material.isBlock()) {
@@ -244,7 +233,7 @@ public class Cube implements CommandExecutor, Listener {
 			}
 
 			// プレイヤーを登録
-			list.put(player, new Stats(size, material));
+			list.put(player, new Stats(size, material, materialData));
 
 			// プレイヤーが次にすべき操作を通知
 			sender.sendMessage(ChatColor.AQUA + "Please LEFT CLICK where you want to place the cube.");

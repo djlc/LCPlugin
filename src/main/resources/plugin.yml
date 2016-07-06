@@ -9,3 +9,8 @@ commands:
     usage: /<command> [Size]
     permission: lcplugin.cube
     permission-message: You don't have <permission>
+  iteminfo:
+    description: get item information in your main hand.
+    usage: /<command>
+    permission: lcplugin.iteminfo
+    permission-message: You don't have <permission>
