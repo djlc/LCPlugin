@@ -16,7 +16,7 @@ public final class LCPlugin extends JavaPlugin {
 
 		// onCommand
 		getCommand("cube").setExecutor(new Cube(this));
-		getCommand("info").setExecutor(new GetItemInfo(this));
+		getCommand("iteminfo").setExecutor(new GetItemInfo(this));
 
 		// VaultAPI
 		if (!setupEconomy()) {
