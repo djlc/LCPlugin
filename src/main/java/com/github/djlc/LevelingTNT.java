@@ -127,8 +127,8 @@ public final class LevelingTNT implements Listener {
 			return;
 
 		// 置いたブロックの位置とアイテム情報を取得
-		Location location = event.getBlock().getLocation();
-		ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
+		Location location = event.getBlock().getLocation().clone();
+		ItemStack item = event.getPlayer().getInventory().getItemInMainHand().clone();
 		item.setAmount(1);
 
 		// Pluginで追加されたTNTかどうか？
@@ -137,7 +137,7 @@ public final class LevelingTNT implements Listener {
 
 		// ブロック登録
 		event.setCancelled(true);
-		blocks.put(location.clone(), item.getItemMeta()); // 重要 : clone()
+		blocks.put(location, item.getItemMeta());
 		event.setCancelled(false);
 
 	}
