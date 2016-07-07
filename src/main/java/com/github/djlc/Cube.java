@@ -36,10 +36,10 @@ public class Cube implements CommandExecutor, Listener {
 		private Location location = null;
 
 		public Stats(int size, Material material, MaterialData materialData) {
-			this.size			= size;
-			this.num			= size * size * size;
-			this.material		= material;
-			this.materialData	= materialData;
+			this.size = size;
+			this.num = size * size * size;
+			this.material = material;
+			this.materialData = materialData;
 		}
 	}
 
@@ -84,14 +84,16 @@ public class Cube implements CommandExecutor, Listener {
 		}
 	}
 
-	private void create(Player p) {
+	@SuppressWarnings("deprecation")
+	private void create(Player player) {
 
-		Stats stats = list.get(p);
+		Stats stats = list.get(player);
 
 		for (int i = 0; i < stats.size; i++) {
 			for (int j = 0; j < stats.size; j++) {
 				for (int k = 0; k < stats.size; k++) {
 					stats.location.getBlock().setType(stats.material);
+					stats.location.getBlock().setData(stats.materialData.getData());
 					stats.location.setX(stats.location.getX() + 1.0);
 				}
 				stats.location.setX(stats.location.getX() - stats.size);
@@ -102,35 +104,35 @@ public class Cube implements CommandExecutor, Listener {
 		}
 
 		// 使用したブロックの個数を通知
-		p.sendMessage(ChatColor.AQUA + "filled " + stats.num + " blocks.");
+		player.sendMessage(ChatColor.AQUA + "filled " + stats.num + " blocks.");
 	}
 
-	private boolean pay(Player p) {
+	private boolean pay(Player player) {
 
-		Stats stats = list.get(p);
+		Stats stats = list.get(player);
 
 		// 支払い処理
-		EconomyResponse er = LCPlugin.econ.withdrawPlayer(p, stats.num);
+		EconomyResponse er = LCPlugin.econ.withdrawPlayer(player, stats.num);
 
 		// 失敗した場合の処理
 		if (!er.transactionSuccess()) {
-			p.sendMessage("An error occured: " + er.errorMessage);
+			player.sendMessage("An error occured: " + er.errorMessage);
 			return false;
 		}
 
 		// 支払い通知
-		p.sendMessage("$" + er.amount + " was removed.");
+		player.sendMessage("$" + er.amount + " was removed.");
 
 		return true;
 	}
 
-	private void removeItems(Player p) {
+	private void removeItems(Player player) {
 		// プレイヤーのインベントリ
-		PlayerInventory pi = p.getInventory();
+		PlayerInventory playerInventory = player.getInventory();
 		// スタック
-		ItemStack is = null;
+		ItemStack itemStack = null;
 		// ユーザーデータ
-		Stats stats = list.get(p);
+		Stats stats = list.get(player);
 
 		// 必要個数のブロックをインベントリから差し引く
 		int id = 0;
@@ -138,8 +140,9 @@ public class Cube implements CommandExecutor, Listener {
 		while (num > 0) {
 			// 対象のブロックが来るまでループを回す
 			while (true) {
-				is = pi.getItem(id);
-				if (is != null && is.getType().equals(stats.material)) {
+				itemStack = playerInventory.getItem(id);
+				if (itemStack != null && itemStack.getType().equals(stats.material)
+						&& itemStack.getData().equals(stats.materialData)) {
 					break;
 				} else {
 					id++;
@@ -147,16 +150,17 @@ public class Cube implements CommandExecutor, Listener {
 			}
 
 			// 対象のブロックをインベントリから差し引く
-			if (num >= is.getAmount()) {
-				num -= is.getAmount();
-				pi.setItem(id, null);
+			if (num >= itemStack.getAmount()) {
+				num -= itemStack.getAmount();
+				playerInventory.setItem(id, null);
 			} else {
-				pi.setItem(id, new ItemStack(stats.material, is.getAmount() - num));
+				playerInventory.setItem(id,
+						new ItemStack(stats.material, itemStack.getAmount() - num, itemStack.getDurability()));
 				num = 0;
 			}
 		}
 		// インベントリの更新
-		p.updateInventory();
+		player.updateInventory();
 	}
 
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -191,9 +195,7 @@ public class Cube implements CommandExecutor, Listener {
 
 			// ブロック
 			Material material = player.getInventory().getItemInMainHand().getType();
-			sender.sendMessage(material.toString());
 			MaterialData materialData = player.getInventory().getItemInMainHand().getData();
-			sender.sendMessage(materialData.toString());
 
 			// ブロックでないなら通知
 			if (!material.isBlock()) {
@@ -213,8 +215,10 @@ public class Cube implements CommandExecutor, Listener {
 			// インベントリ内の指定ブロックの個数をカウント
 			for (int i = 0; i < inventory.getSize(); i++) {
 				itemStack = inventory.getItem(i);
-				if (itemStack != null && itemStack.getType().equals(material))
+				if (itemStack != null && itemStack.getType().equals(material)
+						&& itemStack.getData().equals(materialData)) {
 					cnt += itemStack.getAmount();
+				}
 			}
 
 			// 必要なブロックの個数

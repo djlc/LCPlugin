@@ -13,6 +13,7 @@ public final class LCPlugin extends JavaPlugin {
 	public void onEnable() {
 		// Register Listener
 		getServer().getPluginManager().registerEvents(new Cube(this), this);
+		getServer().getPluginManager().registerEvents(new LevelingTNT(), this);
 
 		// onCommand
 		getCommand("cube").setExecutor(new Cube(this));
