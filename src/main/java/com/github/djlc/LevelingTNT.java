@@ -2,6 +2,7 @@ package com.github.djlc;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
@@ -23,8 +24,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public final class LevelingTNT implements Listener {
 
-	private static HashMap<Location, ItemMeta> blocks = new HashMap<Location, ItemMeta>();
-	private static ArrayList<ItemMeta> itemMetas = new ArrayList<ItemMeta>();
+	private static Map<Location, ItemMeta> blocks = new HashMap<Location, ItemMeta>();
+	private static List<ItemMeta> itemMetas = new ArrayList<ItemMeta>();
 
 	public LevelingTNT() {
 		// MK 1
@@ -62,7 +63,7 @@ public final class LevelingTNT implements Listener {
 	}
 
 	private void addItemAndRecipe(ItemStack item, String name, String a, String b, String c,
-			HashMap<Character, Material> list) {
+			Map<Character, Material> list) {
 		// アイテムの追加
 		ItemMeta itemMeta = item.getItemMeta();
 		itemMeta.setDisplayName(name);
