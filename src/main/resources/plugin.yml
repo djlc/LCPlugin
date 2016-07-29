@@ -14,3 +14,8 @@ commands:
     usage: /<command>
     permission: lcplugin.iteminfo
     permission-message: You don't have <permission>
+  date:
+    description: get date now.
+    usage: /<command>
+    permission: lcplugin.date
+    permission-message: You don't have <permission>

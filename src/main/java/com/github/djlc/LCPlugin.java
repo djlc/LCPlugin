@@ -14,10 +14,12 @@ public final class LCPlugin extends JavaPlugin {
 		// Register Listener
 		getServer().getPluginManager().registerEvents(new Cube(this), this);
 		getServer().getPluginManager().registerEvents(new LevelingTNT(), this);
+		getServer().getPluginManager().registerEvents(new Date(this), this);
 
 		// onCommand
 		getCommand("cube").setExecutor(new Cube(this));
 		getCommand("iteminfo").setExecutor(new GetItemInfo(this));
+		getCommand("date").setExecutor(new Date(this));
 
 		// VaultAPI
 		if (!setupEconomy()) {
