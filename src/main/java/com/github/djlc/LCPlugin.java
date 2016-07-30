@@ -11,6 +11,7 @@ public final class LCPlugin extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+
 		// Register Listener
 		getServer().getPluginManager().registerEvents(new Cube(this), this);
 		getServer().getPluginManager().registerEvents(new LevelingTNT(), this);
@@ -34,6 +35,8 @@ public final class LCPlugin extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+		// config.yml にシリアライズされたデータを保存する
+		saveConfig();
 		// Disable
 		getLogger().info("Plugin has been disabled.");
 	}
