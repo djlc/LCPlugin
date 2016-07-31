@@ -125,14 +125,14 @@ public class Date implements CommandExecutor, Listener {
 	}
 
 	public void serialize() {
-		Map<String, List<List<Double>>> data = new HashMap<>();
+		Map<String, List<List<Double>>> data = new HashMap<String, List<List<Double>>>();
 		for (Location l : dateSignLocations) {
 			if (!data.containsKey(l.getWorld().getName())) {
 				data.put(l.getWorld().getName(), new ArrayList<List<Double>>());
 			}
 			data.get(l.getWorld().getName()).add(Arrays.asList(l.getX(), l.getY(), l.getZ()));
 		}
-		List<Map<String, List<List<Double>>>> temp = new ArrayList<>();
+		List<Map<String, List<List<Double>>>> temp = new ArrayList<Map<String, List<List<Double>>>>();
 		temp.add(data);
 		plugin.getConfig().set(DATESIGN, temp);
 	}
