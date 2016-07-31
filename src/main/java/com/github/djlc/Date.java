@@ -80,7 +80,7 @@ public class Date implements CommandExecutor, Listener {
 						sign.update(); // こ↑こ↓重要
 					}
 				}
-			}.runTaskTimer(plugin, 0, 400);
+			}.runTaskTimer(plugin, 0, 40);
 			eFlag = true;
 		}
 	}
