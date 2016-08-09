@@ -14,8 +14,9 @@ public final class LCPlugin extends JavaPlugin {
 
 		// Register Listener
 		getServer().getPluginManager().registerEvents(new Cube(this), this);
-		getServer().getPluginManager().registerEvents(new LevelingTNT(), this);
+		getServer().getPluginManager().registerEvents(new LevelingTNT(this), this);
 		getServer().getPluginManager().registerEvents(new Date(this), this);
+		getServer().getPluginManager().registerEvents(new Backpack(), this);
 
 		// onCommand
 		getCommand("cube").setExecutor(new Cube(this));

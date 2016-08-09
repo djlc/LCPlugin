@@ -25,7 +25,7 @@ import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class Date implements CommandExecutor, Listener {
+public class Date implements CommandExecutor, Listener, MySerializable {
 
 	// keys
 	private static final String COMMAND_NAME = "date";
@@ -35,7 +35,7 @@ public class Date implements CommandExecutor, Listener {
 	private final LCPlugin plugin;
 
 	// 管理する看板の位置
-	private List<Location> dateSignLocations = new ArrayList<Location>();
+	private static List<Location> dateSignLocations = new ArrayList<Location>();
 
 	public Date(LCPlugin plugin) {
 		this.plugin = plugin;
@@ -60,12 +60,9 @@ public class Date implements CommandExecutor, Listener {
 		return true;
 	}
 
-	// プラグインが有効化されるとき
-	private boolean eFlag = false;
-
 	@EventHandler
 	private void onPluginEnable(PluginEnableEvent event) {
-		if (!eFlag) {
+		if (event.getPlugin().equals(plugin)) {
 			deserialize();
 			new BukkitRunnable() {
 				public void run() {
@@ -81,17 +78,13 @@ public class Date implements CommandExecutor, Listener {
 					}
 				}
 			}.runTaskTimer(plugin, 0, 40);
-			eFlag = true;
 		}
 	}
 
-	private boolean dFlag = false;
-
 	@EventHandler
 	public void onPluginDisable(PluginDisableEvent event) {
-		if (!dFlag) {
+		if (event.getPlugin().equals(plugin)) {
 			serialize();
-			dFlag = true;
 		}
 	}
 
@@ -124,6 +117,7 @@ public class Date implements CommandExecutor, Listener {
 		return weekName[Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1];
 	}
 
+	@Override
 	public void serialize() {
 		Map<String, List<List<Double>>> data = new HashMap<String, List<List<Double>>>();
 		for (Location l : dateSignLocations) {
@@ -137,8 +131,8 @@ public class Date implements CommandExecutor, Listener {
 		plugin.getConfig().set(DATESIGN, temp);
 	}
 
-	@SuppressWarnings("unchecked")
-	private void deserialize() {
+	@Override
+	public void deserialize() {
 		FileConfiguration conf = plugin.getConfig();
 		if (conf.contains(DATESIGN)) {
 			List<Map<?, ?>> list = conf.getMapList(DATESIGN);
@@ -147,6 +141,7 @@ public class Date implements CommandExecutor, Listener {
 			Map<?, ?> map = list.get(0);
 			for (Map.Entry<?, ?> e : map.entrySet()) {
 				String worldName = (String) e.getKey();
+				@SuppressWarnings("unchecked")
 				List<List<Double>> pos = (List<List<Double>>) e.getValue();
 				for (List<Double> f : pos) {
 					dateSignLocations.add(new Location(Bukkit.getWorld(worldName), f.get(0), f.get(1), f.get(2)));
