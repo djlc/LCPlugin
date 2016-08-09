@@ -134,7 +134,8 @@ public final class LevelingTNT implements Listener, MySerializable {
 				for (int k = 0; k < n; k++) {
 					if (!location.getBlock().getType().equals(Material.BEDROCK)) {
 						if (location.getBlock().getType().equals(Material.TNT)) {
-							// ブロック登録解除
+							location.getBlock().setType(Material.AIR);
+							explosion(location.clone(), radius.get(blocks.get(location)));
 							blocks.remove(location);
 						}
 						location.getBlock().breakNaturally();
@@ -149,7 +150,7 @@ public final class LevelingTNT implements Listener, MySerializable {
 		}
 	}
 
-	// そのTNTが整地TNTかどうか
+	// そのアイテムが整地TNTかどうか
 	private boolean isMyItem(ItemMeta meta) {
 		return itemMetas.containsValue(meta);
 	}
