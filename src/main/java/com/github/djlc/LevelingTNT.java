@@ -26,7 +26,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public final class LevelingTNT implements Listener, MySerializable {
+public final class LevelingTNT implements Listener, MyCraftableBlock {
 
 	// keys
 	private static final String LEVELING_TNT = "levelingtnt";
@@ -170,7 +170,8 @@ public final class LevelingTNT implements Listener, MySerializable {
 	}
 
 	@EventHandler
-	private void blockPlaced(BlockPlaceEvent event) {
+	@Override
+	public void onBlockPlace(BlockPlaceEvent event) {
 		// 置かれたブロックがTNTかどうか？
 		if (!event.getBlock().getType().equals(Material.TNT))
 			return;
@@ -192,7 +193,8 @@ public final class LevelingTNT implements Listener, MySerializable {
 	}
 
 	@EventHandler
-	private void blockBroke(BlockBreakEvent event) {
+	@Override
+	public void onBlockBreak(BlockBreakEvent event) {
 		// ブロックの位置を取得
 		Location location = event.getBlock().getLocation();
 		if (!blocks.containsKey(location) || !event.getBlock().getType().equals(Material.TNT)) {
