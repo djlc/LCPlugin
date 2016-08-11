@@ -1,5 +1,6 @@
 package com.github.djlc;
 
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -12,11 +13,14 @@ public final class LCPlugin extends JavaPlugin {
 	@Override
 	public void onEnable() {
 
+		// Serializable Class
+		ConfigurationSerialization.registerClass(MyRecipe.class);
+
 		// Register Listener
 		getServer().getPluginManager().registerEvents(new Cube(this), this);
-		getServer().getPluginManager().registerEvents(new LevelingTNT(this), this);
 		getServer().getPluginManager().registerEvents(new Date(this), this);
-		getServer().getPluginManager().registerEvents(new Backpack(), this);
+		getServer().getPluginManager().registerEvents(new MyRecipeManager(this), this);
+		//getServer().getPluginManager().registerEvents(new Backpack(), this);
 
 		// onCommand
 		getCommand("cube").setExecutor(new Cube(this));

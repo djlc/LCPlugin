@@ -1,6 +1,7 @@
 package com.github.djlc;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -15,6 +16,7 @@ import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.material.MaterialData;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import net.milkbowl.vault.economy.EconomyResponse;
 
@@ -44,12 +46,12 @@ public class Cube implements CommandExecutor, Listener {
 	}
 
 	// 本体
-	private final LCPlugin plugin;
+	private final JavaPlugin plugin;
 
 	// ユーザーを登録するリスト
-	private static HashMap<Player, Stats> list = new HashMap<Player, Stats>();
+	private static Map<Player, Stats> list = new HashMap<Player, Stats>();
 
-	public Cube(LCPlugin plugin) {
+	public Cube(JavaPlugin plugin) {
 		this.plugin = plugin;
 	}
 
