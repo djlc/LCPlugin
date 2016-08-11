@@ -1,12 +1,22 @@
 package com.github.djlc;
 
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.Location;
+import org.bukkit.inventory.ItemStack;
 
-public final class LevelingTNT implements Listener {
+public class LevelingTNT extends MyCraftableBlock {
 
-	public LevelingTNT(JavaPlugin plugin) {
+	private int radius = 0;
 
+	public LevelingTNT(ItemStack itemStack, Location location, int radius) {
+		super(itemStack, location);
+		this.setRadius(radius);
 	}
 
+	public int getRadius() {
+		return radius;
+	}
+
+	public void setRadius(int radius) {
+		this.radius = radius;
+	}
 }

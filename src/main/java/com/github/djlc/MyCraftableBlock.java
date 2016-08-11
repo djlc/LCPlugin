@@ -1,103 +1,53 @@
 package com.github.djlc;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.java.JavaPlugin;
 
-public abstract class MyCraftableBlock implements ConfigurationSerializable {
+public class MyCraftableBlock implements ConfigurationSerializable {
 
-	// ブロックデータ
-	protected List<Location> blockData = new ArrayList<>();
+	// Key
+	private static final String LOCATON = "location";
+	private static final String ITEMSTACK = "item";
 
-	// このクラスを継承しているクラス全体におけるブロックデータ
-	// ブロック名とそのブロックデータによるハッシュマップで管理
-	protected static Map<String, List<Location>> map = new HashMap<>();
+	// ブロックの座標
+	protected Location location = null;
 
-	// ブロック1個のItemStack
-	protected ItemStack item = null;
-
-	// ブロックの識別子
-	protected String itemCode = "";
+	// ブロックのItemStack
+	protected ItemStack itemStack = null;
 
 	// コンストラクタ
-	public MyCraftableBlock(JavaPlugin plugin, Material material, String itemName, String itemCode,
-			String a, String b, String c, Map<Character, Material> list) {
-		this.itemCode = itemCode;
-		addItemAndRecipe(new ItemStack(material, 1), itemName, a, b, c, list);
-		map.put(itemCode, blockData);
+	public MyCraftableBlock(ItemStack itemStack, Location location) {
+		this.itemStack = itemStack;
+		this.location = location;
 	}
 
-	// ItemMetaとレシピを追加
-	protected void addItemAndRecipe(ItemStack item, String itemName, String a, String b, String c,
-			Map<Character, Material> list) {
-		// アイテムの追加
-		ItemMeta itemMeta = item.getItemMeta();
-		itemMeta.setDisplayName(itemName);
-		item.setItemMeta(itemMeta);
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof MyCraftableBlock) {
+			MyCraftableBlock m = (MyCraftableBlock) obj;
 
-		// レシピの追加
-		ShapedRecipe newItem = new ShapedRecipe(item);
-		newItem.shape(a, b, c);
-		for (Map.Entry<Character, Material> map : list.entrySet()) {
-			newItem.setIngredient(map.getKey(), map.getValue());
+			// itemStackとLocationが一致すればtrueを返す
+			return (m.itemStack.equals(this.itemStack) && m.location.equals(this.location));
 		}
-
-		// レシピの登録
-		Bukkit.getServer().addRecipe(newItem);
-	}
-
-	@EventHandler
-	public void onBlockPlace(BlockPlaceEvent event) {
-		// 置いたブロックの位置とアイテム情報を取得
-		Location location = event.getBlock().getLocation().clone();
-		ItemStack item = event.getPlayer().getInventory().getItemInMainHand().clone();
-		item.setAmount(1);
-
-		// Pluginで追加されたブロックかどうか？
-		if (!item.equals(item))
-			return;
-
-		// ブロック登録
-		event.setCancelled(true);
-		blockData.add(location);
-		event.setCancelled(false);
-	}
-
-	@EventHandler
-	public void onBlockBreak(BlockBreakEvent event) {
-		// ブロックの位置を取得
-		Location location = event.getBlock().getLocation();
-		if (!blockData.contains(location) || !event.getBlock().getType().equals(item.getType())) {
-			return;
-		}
-
-		// 破壊したブロックをドロップ
-		event.setCancelled(true);
-		event.getBlock().setType(Material.AIR);
-		if (event.getPlayer().getGameMode().equals(GameMode.SURVIVAL)) {
-			event.getPlayer().getWorld().dropItemNaturally(location, item.clone());
-		}
-
-		// ブロック登録解除
-		blockData.remove(location);
+		return false;
 	}
 
 	@Override
 	public Map<String, Object> serialize() {
-		return null;
+		Map<String, Object> map = new HashMap<>();
+		map.put(LOCATON, new SerializableLocation(location));
+		map.put(ITEMSTACK, itemStack);
+		return map;
+	}
+
+	public static MyCraftableBlock deserialize(Map<String, Object> map) {
+		SerializableLocation loc = (SerializableLocation) map.get(LOCATON);
+		ItemStack item = (ItemStack) map.get(ITEMSTACK);
+		MyCraftableBlock instance = new MyCraftableBlock(item, loc.getLocation());
+		return instance;
 	}
 }

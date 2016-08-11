@@ -14,12 +14,16 @@ public final class LCPlugin extends JavaPlugin {
 	public void onEnable() {
 
 		// Serializable Class
-		ConfigurationSerialization.registerClass(MyRecipe.class);
+		ConfigurationSerialization.registerClass(SerializableLocation.class);
+		ConfigurationSerialization.registerClass(MyCraftableBlock.class);
+		ConfigurationSerialization.registerClass(CustomItemAndRecipe.class);
 
 		// Register Listener
 		getServer().getPluginManager().registerEvents(new Cube(this), this);
 		getServer().getPluginManager().registerEvents(new Date(this), this);
-		getServer().getPluginManager().registerEvents(new MyRecipeManager(this), this);
+		getServer().getPluginManager().registerEvents(new CustomItemAndRecipeManager(this), this);
+		getServer().getPluginManager().registerEvents(new MyCraftableBlockManager(this), this);
+		//getServer().getPluginManager().registerEvents(new LevelingTNTManager(this), this);
 		//getServer().getPluginManager().registerEvents(new Backpack(), this);
 
 		// onCommand
