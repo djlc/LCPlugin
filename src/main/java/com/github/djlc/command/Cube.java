@@ -1,4 +1,4 @@
-package com.github.djlc;
+package com.github.djlc.command;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +17,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.material.MaterialData;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.github.djlc.LCPlugin;
 
 import net.milkbowl.vault.economy.EconomyResponse;
 

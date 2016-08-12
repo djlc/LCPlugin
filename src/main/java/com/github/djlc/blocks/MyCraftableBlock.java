@@ -1,17 +1,14 @@
-package com.github.djlc;
-
-import java.util.HashMap;
-import java.util.Map;
+package com.github.djlc.blocks;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.inventory.ItemStack;
 
-public class MyCraftableBlock implements ConfigurationSerializable {
+public abstract class MyCraftableBlock implements ConfigurationSerializable {
 
 	// Key
-	private static final String LOCATON = "location";
-	private static final String ITEMSTACK = "item";
+	protected static final String LOCATON = "location";
+	protected static final String ITEMSTACK = "item";
 
 	// ブロックの座標
 	protected Location location = null;
@@ -25,6 +22,15 @@ public class MyCraftableBlock implements ConfigurationSerializable {
 		this.location = location;
 	}
 
+	// getter
+	public Location getLocation() {
+		return location;
+	}
+
+	public ItemStack getItemStack() {
+		return itemStack;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof MyCraftableBlock) {
@@ -34,20 +40,5 @@ public class MyCraftableBlock implements ConfigurationSerializable {
 			return (m.itemStack.equals(this.itemStack) && m.location.equals(this.location));
 		}
 		return false;
-	}
-
-	@Override
-	public Map<String, Object> serialize() {
-		Map<String, Object> map = new HashMap<>();
-		map.put(LOCATON, new SerializableLocation(location));
-		map.put(ITEMSTACK, itemStack);
-		return map;
-	}
-
-	public static MyCraftableBlock deserialize(Map<String, Object> map) {
-		SerializableLocation loc = (SerializableLocation) map.get(LOCATON);
-		ItemStack item = (ItemStack) map.get(ITEMSTACK);
-		MyCraftableBlock instance = new MyCraftableBlock(item, loc.getLocation());
-		return instance;
 	}
 }

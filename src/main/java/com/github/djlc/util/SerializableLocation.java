@@ -1,4 +1,4 @@
-package com.github.djlc;
+package com.github.djlc.util;
 
 import java.util.HashMap;
 import java.util.Map;

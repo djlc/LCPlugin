@@ -1,4 +1,4 @@
-package com.github.djlc;
+package com.github.djlc.util;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,15 +12,17 @@ public class CustomItemAndRecipe implements ConfigurationSerializable {
 
 	// 定数
 	public static final String RECIPE = "recipes";
-	private static final String RECIPE_ITEM = "item";
-	private static final String RECIPE_CONTENT = "content";
-	private static final String RECIPE_NAME = "name";
-	private static final String RECIPE_LIST = "list";
+	private static final String ITEM = "item";
+	private static final String CONTENT = "content";
+	private static final String NAME = "name";
+	private static final String LIST = "list";
+	private static final String PARAMETER = "parameter";
 
 	// データ
 	private ItemStack item;
 	private String a, b, c, name;
 	private Map<String, Integer> list;
+	private Object parameter;
 
 	// コンストラクタ(デシリアライズ用)
 	public CustomItemAndRecipe() {
@@ -28,13 +30,15 @@ public class CustomItemAndRecipe implements ConfigurationSerializable {
 	}
 
 	// コンストラクタ(通常用)
-	public CustomItemAndRecipe(ItemStack item, String name, String a, String b, String c, Map<String, Integer> list) {
+	public CustomItemAndRecipe(ItemStack item, String name, String a, String b, String c, Map<String, Integer> list,
+			Object parameter) {
 		this.item = item;
 		this.a = a;
 		this.b = b;
 		this.c = c;
 		this.name = name;
 		this.list = list;
+		this.parameter = parameter;
 	}
 
 	// シリアライズ
@@ -44,10 +48,11 @@ public class CustomItemAndRecipe implements ConfigurationSerializable {
 		Map<String, Object> map = new HashMap<>();
 
 		// シリアライズするデータをMapに追加
-		map.put(RECIPE_ITEM, getItem());
-		map.put(RECIPE_CONTENT, Arrays.asList(getA(), getB(), getC()));
-		map.put(RECIPE_NAME, getName());
-		map.put(RECIPE_LIST, getList());
+		map.put(ITEM, item);
+		map.put(CONTENT, Arrays.asList(a, b, c));
+		map.put(NAME, name);
+		map.put(LIST, list);
+		map.put(PARAMETER, getParameter());
 
 		return map;
 	}
@@ -57,22 +62,25 @@ public class CustomItemAndRecipe implements ConfigurationSerializable {
 	public static CustomItemAndRecipe deserialize(Map<String, Object> map) {
 
 		// インスタンスを作成
-		CustomItemAndRecipe instance= new CustomItemAndRecipe();
+		CustomItemAndRecipe instance = new CustomItemAndRecipe();
 
 		// item
-		instance.item = (ItemStack) map.get(RECIPE_ITEM);
+		instance.item = (ItemStack) map.get(ITEM);
 
 		// content
-		List<String> list = (List<String>) map.get(RECIPE_CONTENT);
+		List<String> list = (List<String>) map.get(CONTENT);
 		instance.a = list.get(0);
 		instance.b = list.get(1);
 		instance.c = list.get(2);
 
 		// name
-		instance.name = (String) map.get(RECIPE_NAME);
+		instance.name = (String) map.get(NAME);
 
 		// list
-		instance.list = (Map<String, Integer>) map.get(RECIPE_LIST);
+		instance.list = (Map<String, Integer>) map.get(LIST);
+
+		// parameter
+		instance.parameter = map.get(PARAMETER);
 
 		return instance;
 	}
@@ -103,5 +111,9 @@ public class CustomItemAndRecipe implements ConfigurationSerializable {
 
 	public void setList(Map<String, Integer> list) {
 		this.list = list;
+	}
+
+	public Object getParameter() {
+		return parameter;
 	}
 }

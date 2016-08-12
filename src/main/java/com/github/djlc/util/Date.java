@@ -1,4 +1,4 @@
-package com.github.djlc;
+package com.github.djlc.util;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -57,29 +57,46 @@ public class Date implements CommandExecutor, Listener {
 		return true;
 	}
 
+	@SuppressWarnings("unchecked")
 	@EventHandler
 	private void onPluginEnable(PluginEnableEvent event) {
 		if (event.getPlugin().equals(plugin)) {
-			new BukkitRunnable() {
-				public void run() {
-					for (Location l : dateSignLocations) {
-						Sign sign = (Sign) l.getBlock().getState();
-						java.util.Date date = new java.util.Date();
-						SimpleDateFormat f1 = new SimpleDateFormat("yyyy/MM/dd");
-						SimpleDateFormat f2 = new SimpleDateFormat("HH:mm");
-						sign.setLine(1, f1.format(date));
-						sign.setLine(2, "[" + dayOfWeekToString() + "]");
-						sign.setLine(3, f2.format(date));
-						sign.update(); // こ↑こ↓重要
-					}
+
+			// データの読み込み
+			if (plugin.getConfig().contains(DATESIGN)) {
+				List<SerializableLocation> temp = (List<SerializableLocation>) plugin.getConfig().getList(DATESIGN);
+				for (SerializableLocation e : temp) {
+					dateSignLocations.add(e.getLocation());
 				}
-			}.runTaskTimer(plugin, 0, 40);
+
+				// タイマーの実行
+				new BukkitRunnable() {
+					public void run() {
+						for (Location l : dateSignLocations) {
+							Sign sign = (Sign) l.getBlock().getState();
+							java.util.Date date = new java.util.Date();
+							SimpleDateFormat f1 = new SimpleDateFormat("yyyy/MM/dd");
+							SimpleDateFormat f2 = new SimpleDateFormat("HH:mm");
+							sign.setLine(1, f1.format(date));
+							sign.setLine(2, "[" + dayOfWeekToString() + "]");
+							sign.setLine(3, f2.format(date));
+							sign.update(); // こ↑こ↓重要
+						}
+					}
+				}.runTaskTimer(plugin, 0, 40);
+			}
 		}
 	}
 
 	@EventHandler
 	public void onPluginDisable(PluginDisableEvent event) {
 		if (event.getPlugin().equals(plugin)) {
+			// データの保存
+			List<SerializableLocation> data = new ArrayList<>();
+			for (Location l : dateSignLocations) {
+				data.add(new SerializableLocation(l));
+			}
+			plugin.getConfig().set(DATESIGN, data);
 		}
 	}
 

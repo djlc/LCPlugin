@@ -4,6 +4,16 @@ import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.github.djlc.blocks.LevelingTNT;
+import com.github.djlc.command.Cube;
+import com.github.djlc.command.GetItemInfo;
+import com.github.djlc.listeners.LevelingTNTListener;
+import com.github.djlc.listeners.MyCraftableBlockListener;
+import com.github.djlc.lists.CustomItemAndRecipeList;
+import com.github.djlc.util.CustomItemAndRecipe;
+import com.github.djlc.util.Date;
+import com.github.djlc.util.SerializableLocation;
+
 import net.milkbowl.vault.economy.Economy;
 
 public final class LCPlugin extends JavaPlugin {
@@ -15,15 +25,14 @@ public final class LCPlugin extends JavaPlugin {
 
 		// Serializable Class
 		ConfigurationSerialization.registerClass(SerializableLocation.class);
-		ConfigurationSerialization.registerClass(MyCraftableBlock.class);
+		ConfigurationSerialization.registerClass(LevelingTNT.class);
 		ConfigurationSerialization.registerClass(CustomItemAndRecipe.class);
 
 		// Register Listener
 		getServer().getPluginManager().registerEvents(new Cube(this), this);
 		getServer().getPluginManager().registerEvents(new Date(this), this);
-		getServer().getPluginManager().registerEvents(new CustomItemAndRecipeManager(this), this);
-		getServer().getPluginManager().registerEvents(new MyCraftableBlockManager(this), this);
-		//getServer().getPluginManager().registerEvents(new LevelingTNTManager(this), this);
+		getServer().getPluginManager().registerEvents(new MyCraftableBlockListener(this), this);
+		getServer().getPluginManager().registerEvents(new LevelingTNTListener(), this);
 		//getServer().getPluginManager().registerEvents(new Backpack(), this);
 
 		// onCommand
@@ -37,6 +46,9 @@ public final class LCPlugin extends JavaPlugin {
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
+
+		// CustomRecipes
+		new CustomItemAndRecipeList(this);
 
 		// Enable
 		getLogger().info("Plugin has been enabled.");
