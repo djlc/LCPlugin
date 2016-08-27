@@ -9,8 +9,7 @@ import com.github.djlc.command.Cube;
 import com.github.djlc.command.GetItemInfo;
 import com.github.djlc.listeners.LevelingTNTListener;
 import com.github.djlc.listeners.MyCraftableBlockListener;
-import com.github.djlc.lists.CustomItemAndRecipeList;
-import com.github.djlc.util.CustomItemAndRecipe;
+import com.github.djlc.util.CustomItem;
 import com.github.djlc.util.Date;
 import com.github.djlc.util.SerializableLocation;
 
@@ -26,7 +25,7 @@ public final class LCPlugin extends JavaPlugin {
 		// Serializable Class
 		ConfigurationSerialization.registerClass(SerializableLocation.class);
 		ConfigurationSerialization.registerClass(LevelingTNT.class);
-		ConfigurationSerialization.registerClass(CustomItemAndRecipe.class);
+		ConfigurationSerialization.registerClass(CustomItem.class);
 
 		// Register Listener
 		getServer().getPluginManager().registerEvents(new Cube(this), this);
@@ -46,9 +45,6 @@ public final class LCPlugin extends JavaPlugin {
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
-
-		// CustomRecipes
-		new CustomItemAndRecipeList(this);
 
 		// Enable
 		getLogger().info("Plugin has been enabled.");

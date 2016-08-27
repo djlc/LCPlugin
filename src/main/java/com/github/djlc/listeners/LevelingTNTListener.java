@@ -12,7 +12,6 @@ import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.github.djlc.blocks.LevelingTNT;
-import com.github.djlc.lists.CustomItemAndRecipeList;
 import com.github.djlc.lists.MyCraftableBlockList;
 
 public class LevelingTNTListener implements Listener {
@@ -25,16 +24,15 @@ public class LevelingTNTListener implements Listener {
 		item.setAmount(1);
 
 		// Pluginで追加されたブロックかどうか？
-		if (CustomItemAndRecipeList.contains(item)) {
+		if (LevelingTNT.isLevelingTNT(item)) {
 			// ブロック登録
 			event.setCancelled(true);
-			MyCraftableBlockList.add(new LevelingTNT(item, location, (int) CustomItemAndRecipeList.getParameter(item)));
+			MyCraftableBlockList.add(new LevelingTNT(item, location));
 			event.setCancelled(false);
-			System.out.println("add");
-			return;
 		}
 	}
 
+	// エンティティが爆発するときに呼び出される
 	@EventHandler
 	private void blockExplode(ExplosionPrimeEvent event) {
 		// Entityを取得
@@ -46,19 +44,10 @@ public class LevelingTNTListener implements Listener {
 		}
 		TNTPrimed tnt = (TNTPrimed) entity;
 
-		// 爆破位置の調整
+		// ブロックリストの中で最短距離の位置にあるブロックを取得
 		Location location = MyCraftableBlockList.getNearestLocation(tnt.getLocation());
-		/*
-		 * double distance = 2.0; for (Map.Entry<Location, MyCraftableBlock> e :
-		 * MyCraftableBlockList.entrySet()) { Location l = e.getKey(); if
-		 * (e.getValue() instanceof LevelingTNT && l.distance(location) <
-		 * distance) { distance = l.distance(location); location = l.clone();
-		 * distance = l.distance(location); } } if
-		 * (!blockList.containsKey(location)) { return; }
-		 */
 
-		if (tnt.getLocation().distance(location) <= 1.0E-10) {
-			System.out.println("normal tnt");
+		if (location == null || tnt.getLocation().distance(location) >= 1) {
 			return;
 		}
 
@@ -78,7 +67,6 @@ public class LevelingTNTListener implements Listener {
 		Location location = levelingTNT.getLocation().clone();
 		// 半径
 		int radius = levelingTNT.getRadius();
-
 		// 座標を立方体の頂点に移動
 		location.subtract(radius, radius, radius);
 

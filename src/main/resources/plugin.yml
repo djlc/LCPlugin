@@ -1,6 +1,6 @@
 name: LCPlugin
 main: com.github.djlc.LCPlugin
-version: 0.0.1
+version: 0.0.2
 depend: [Vault]
 
 commands:

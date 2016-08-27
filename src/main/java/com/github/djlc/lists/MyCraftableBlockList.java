@@ -44,6 +44,8 @@ public class MyCraftableBlockList {
 	public static Location getNearestLocation(Location location) {
 		Location nearest = location;
 		double d = Double.MAX_VALUE;
+		if (blockList.isEmpty()) return null;
+		
 		for (Location l : blockList.keySet()) {
 			if (d > l.distance(location)) {
 				d = l.distance(location);
