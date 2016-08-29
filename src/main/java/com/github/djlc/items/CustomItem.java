@@ -1,10 +1,13 @@
-package com.github.djlc.util;
+package com.github.djlc.items;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
+import com.github.djlc.recipes.CustomRecipe;
+
+// レシピと何らかのデータを保持するクラス
 public class CustomItem implements ConfigurationSerializable {
 
 	// 定数

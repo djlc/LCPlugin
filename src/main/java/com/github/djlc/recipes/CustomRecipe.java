@@ -1,4 +1,4 @@
-package com.github.djlc.util;
+package com.github.djlc.recipes;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
+// レシピを登録するためのクラス
 public class CustomRecipe implements ConfigurationSerializable {
 	// 定数
 	public static final String RECIPE = "recipes";

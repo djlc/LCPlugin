@@ -5,11 +5,14 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.djlc.blocks.LevelingTNT;
+import com.github.djlc.blocks.PortableChest;
 import com.github.djlc.command.Cube;
 import com.github.djlc.command.GetItemInfo;
+import com.github.djlc.items.CustomItem;
 import com.github.djlc.listeners.LevelingTNTListener;
 import com.github.djlc.listeners.MyCraftableBlockListener;
-import com.github.djlc.util.CustomItem;
+import com.github.djlc.listeners.PortableChestListener;
+import com.github.djlc.recipes.RecipeListener;
 import com.github.djlc.util.Date;
 import com.github.djlc.util.SerializableLocation;
 
@@ -23,16 +26,18 @@ public final class LCPlugin extends JavaPlugin {
 	public void onEnable() {
 
 		// Serializable Class
+		ConfigurationSerialization.registerClass(CustomItem.class);
 		ConfigurationSerialization.registerClass(SerializableLocation.class);
 		ConfigurationSerialization.registerClass(LevelingTNT.class);
-		ConfigurationSerialization.registerClass(CustomItem.class);
+		ConfigurationSerialization.registerClass(PortableChest.class);
 
 		// Register Listener
 		getServer().getPluginManager().registerEvents(new Cube(this), this);
 		getServer().getPluginManager().registerEvents(new Date(this), this);
 		getServer().getPluginManager().registerEvents(new MyCraftableBlockListener(this), this);
+		getServer().getPluginManager().registerEvents(new RecipeListener(this), this);
 		getServer().getPluginManager().registerEvents(new LevelingTNTListener(), this);
-		//getServer().getPluginManager().registerEvents(new Backpack(), this);
+		getServer().getPluginManager().registerEvents(new PortableChestListener(), this);
 
 		// onCommand
 		getCommand("cube").setExecutor(new Cube(this));

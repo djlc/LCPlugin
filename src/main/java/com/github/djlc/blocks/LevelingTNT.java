@@ -1,5 +1,6 @@
 package com.github.djlc.blocks;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -7,10 +8,10 @@ import java.util.Map;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import com.github.djlc.util.CustomRecipe;
+import com.github.djlc.base64.ItemStackToBase64;
+import com.github.djlc.base64.LocationToBase64;
 import com.github.djlc.util.SerializableLocation;
 
 @SuppressWarnings("serial")
@@ -18,7 +19,8 @@ public class LevelingTNT extends MyCraftableBlock {
 
 	// アイテム名
 	private static final List<String> LEVELING_TNT = Arrays.asList("Leveling TNT MK1 (3x3x3)",
-			"Leveling TNT MK2 (5x5x5)", "Leveling TNT MK3 (9x9x9)", "Leveling TNT MK4 (15x15x15)");
+			"Leveling TNT MK2 (5x5x5)", ChatColor.AQUA + "Leveling TNT MK3 (9x9x9)",
+			ChatColor.RED + "Leveling TNT MK4 (15x15x15)");
 
 	// ブロックの種類
 	private int blockType;
@@ -50,46 +52,15 @@ public class LevelingTNT extends MyCraftableBlock {
 	@Override
 	public Map<String, Object> serialize() {
 		Map<String, Object> map = new HashMap<>();
-		map.put(LOCATON, new SerializableLocation(location));
-		map.put(ITEMSTACK, itemStack);
+		map.put(LOCATON, LocationToBase64.encode(location));
+		map.put(ITEMSTACK, ItemStackToBase64.encode(itemStack));
 		return map;
 	}
 
-	public static LevelingTNT deserialize(Map<String, Object> map) {
-		return new LevelingTNT((ItemStack) map.get(ITEMSTACK), ((SerializableLocation) map.get(LOCATON)).getLocation());
-	}
-
-	static {
-		// Leveling TNT
-		new CustomRecipe(new ItemStack(Material.TNT), LEVELING_TNT.get(0), "***", "*%*", "***",
-				new HashMap<String, Integer>() {
-					{
-						put("*", 331); // RedStone
-						put("%", 46); // TNT
-					}
-				});
-		new CustomRecipe(new ItemStack(Material.TNT), LEVELING_TNT.get(1), "***", "*%*", "***",
-				new HashMap<String, Integer>() {
-					{
-						put("*", 265); // Iron Ingot
-						put("%", 46);
-					}
-				});
-		new CustomRecipe(new ItemStack(Material.TNT), ChatColor.AQUA + LEVELING_TNT.get(2), "***", "*%*", "***",
-				new HashMap<String, Integer>() {
-					{
-						put("*", 266); // Gold Ingot
-						put("%", 46);
-					}
-				});
-		new CustomRecipe(new ItemStack(Material.TNT), ChatColor.RED + LEVELING_TNT.get(3), "***", "*%*", "***",
-				new HashMap<String, Integer>() {
-					{
-						put("*", 264); // Diamond
-						put("%", 46);
-					}
-				});
-		System.out.println("LevelingTNT Recipes were loaded.");
+	public static LevelingTNT deserialize(Map<String, Object> map) throws IOException {
+		ItemStack itemStack = ItemStackToBase64.decode((String) map.get(ITEMSTACK));
+		Location location = LocationToBase64.decode((String) map.get(LOCATON));
+		return new LevelingTNT(itemStack, location);
 	}
 
 	public static boolean isLevelingTNT(ItemStack item) {
