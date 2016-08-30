@@ -13,8 +13,7 @@ public class LevelingTNTRecipe {
 	
 	// 書体を含めたアイテム名
 	private static final List<String> ITEM_NAME = Arrays.asList("Leveling TNT MK1 (3x3x3)",
-			"Leveling TNT MK2 (5x5x5)", ChatColor.AQUA + "Leveling TNT MK3 (9x9x9)",
-			ChatColor.RED + "Leveling TNT MK4 (15x15x15)");
+			"Leveling TNT MK2 (5x5x5)", "Leveling TNT MK3 (9x9x9)", "Leveling TNT MK4 (15x15x15)");
 
 	static {
 		// Leveling TNT

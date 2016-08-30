@@ -13,8 +13,7 @@ import com.github.djlc.listeners.LevelingTNTListener;
 import com.github.djlc.listeners.MyCraftableBlockListener;
 import com.github.djlc.listeners.PortableChestListener;
 import com.github.djlc.recipes.RecipeListener;
-import com.github.djlc.util.Date;
-import com.github.djlc.util.SerializableLocation;
+import com.github.djlc.util.DateSign;
 
 import net.milkbowl.vault.economy.Economy;
 
@@ -27,13 +26,12 @@ public final class LCPlugin extends JavaPlugin {
 
 		// Serializable Class
 		ConfigurationSerialization.registerClass(CustomItem.class);
-		ConfigurationSerialization.registerClass(SerializableLocation.class);
 		ConfigurationSerialization.registerClass(LevelingTNT.class);
 		ConfigurationSerialization.registerClass(PortableChest.class);
 
 		// Register Listener
 		getServer().getPluginManager().registerEvents(new Cube(this), this);
-		getServer().getPluginManager().registerEvents(new Date(this), this);
+		getServer().getPluginManager().registerEvents(new DateSign(this), this);
 		getServer().getPluginManager().registerEvents(new MyCraftableBlockListener(this), this);
 		getServer().getPluginManager().registerEvents(new RecipeListener(this), this);
 		getServer().getPluginManager().registerEvents(new LevelingTNTListener(), this);
@@ -42,7 +40,7 @@ public final class LCPlugin extends JavaPlugin {
 		// onCommand
 		getCommand("cube").setExecutor(new Cube(this));
 		getCommand("iteminfo").setExecutor(new GetItemInfo(this));
-		getCommand("date").setExecutor(new Date(this));
+		getCommand("date").setExecutor(new DateSign(this));
 
 		// VaultAPI
 		if (!setupEconomy()) {

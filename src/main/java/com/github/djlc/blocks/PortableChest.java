@@ -54,7 +54,7 @@ public class PortableChest extends MyCraftableBlock {
 	}
 
 	public static boolean isPortableChest(ItemStack item) {
-		return item.getItemMeta().getDisplayName().equals(TITLE);
+		return TITLE.equals(item.getItemMeta().getDisplayName());
 	}
 
 }

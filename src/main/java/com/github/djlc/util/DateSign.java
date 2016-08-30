@@ -1,5 +1,6 @@
 package com.github.djlc.util;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -21,7 +22,9 @@ import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class Date implements CommandExecutor, Listener {
+import com.github.djlc.base64.LocationToBase64;
+
+public class DateSign implements CommandExecutor, Listener {
 
 	// プラグイン本体
 	private JavaPlugin plugin;
@@ -34,7 +37,7 @@ public class Date implements CommandExecutor, Listener {
 	private static List<Location> dateSignLocations = new ArrayList<Location>();
 
 	// コンストラクタ
-	public Date(JavaPlugin plugin) {
+	public DateSign(JavaPlugin plugin) {
 		this.plugin = plugin;
 	}
 
@@ -59,14 +62,14 @@ public class Date implements CommandExecutor, Listener {
 
 	@SuppressWarnings("unchecked")
 	@EventHandler
-	private void onPluginEnable(PluginEnableEvent event) {
+	private void onPluginEnable(PluginEnableEvent event) throws IOException {
 		if (event.getPlugin().equals(plugin)) {
 
 			// データの読み込み
 			if (plugin.getConfig().contains(DATESIGN)) {
-				List<SerializableLocation> temp = (List<SerializableLocation>) plugin.getConfig().getList(DATESIGN);
-				for (SerializableLocation e : temp) {
-					dateSignLocations.add(e.getLocation());
+				List<String> temp = (List<String>) plugin.getConfig().get(DATESIGN);
+				for (String e : temp) {
+					dateSignLocations.add(LocationToBase64.decode(e));
 				}
 
 				// タイマーの実行
@@ -92,9 +95,9 @@ public class Date implements CommandExecutor, Listener {
 	public void onPluginDisable(PluginDisableEvent event) {
 		if (event.getPlugin().equals(plugin)) {
 			// データの保存
-			List<SerializableLocation> data = new ArrayList<>();
+			List<String> data = new ArrayList<>();
 			for (Location l : dateSignLocations) {
-				data.add(new SerializableLocation(l));
+				data.add(LocationToBase64.encode(l));
 			}
 			plugin.getConfig().set(DATESIGN, data);
 		}

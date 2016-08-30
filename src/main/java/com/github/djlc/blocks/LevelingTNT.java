@@ -6,21 +6,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 
 import com.github.djlc.base64.ItemStackToBase64;
 import com.github.djlc.base64.LocationToBase64;
-import com.github.djlc.util.SerializableLocation;
 
 @SuppressWarnings("serial")
 public class LevelingTNT extends MyCraftableBlock {
 
 	// アイテム名
 	private static final List<String> LEVELING_TNT = Arrays.asList("Leveling TNT MK1 (3x3x3)",
-			"Leveling TNT MK2 (5x5x5)", ChatColor.AQUA + "Leveling TNT MK3 (9x9x9)",
-			ChatColor.RED + "Leveling TNT MK4 (15x15x15)");
+			"Leveling TNT MK2 (5x5x5)", "Leveling TNT MK3 (9x9x9)", "Leveling TNT MK4 (15x15x15)");
 
 	// ブロックの種類
 	private int blockType;

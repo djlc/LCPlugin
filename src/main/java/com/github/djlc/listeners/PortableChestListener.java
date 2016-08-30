@@ -14,9 +14,6 @@ import com.github.djlc.blocks.PortableChest;
 import com.github.djlc.lists.MyCraftableBlockList;
 
 public class PortableChestListener implements Listener {
-	public PortableChestListener() {
-		// TODO Auto-generated constructor stub
-	}
 
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent event) {
