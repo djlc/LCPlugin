@@ -7,11 +7,13 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.github.djlc.blocks.LevelingTNT;
+import com.github.djlc.blocks.PortableChest;
 import com.github.djlc.lists.MyCraftableBlockList;
 
 public class LevelingTNTListener implements Listener {
@@ -32,6 +34,31 @@ public class LevelingTNTListener implements Listener {
 		}
 	}
 
+	@EventHandler
+	public void onBlockBreak(BlockBreakEvent event) {
+		// 破壊したブロックの位置を取得
+		Location location = event.getBlock().getLocation();
+		if (!MyCraftableBlockList.contains(location)) {
+			return;
+		}
+		
+		// ブロックの取得
+		LevelingTNT block = null;
+		if (MyCraftableBlockList.get(location) instanceof LevelingTNT) {
+			block = (LevelingTNT) MyCraftableBlockList.get(location);
+		} else {
+			return;
+		}
+		
+		// 破壊したブロックをドロップ
+		event.setCancelled(true);
+		event.getBlock().setType(Material.AIR);
+		event.getPlayer().getWorld().dropItemNaturally(location, MyCraftableBlockList.get(location).getItemStack());
+
+		// ブロック登録解除
+		MyCraftableBlockList.remove(location);
+	}
+	
 	// エンティティが爆発するときに呼び出される
 	@EventHandler
 	private void blockExplode(ExplosionPrimeEvent event) {

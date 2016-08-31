@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import com.github.djlc.base64.InventoryToBase64;
 import com.github.djlc.base64.ItemStackToBase64;
 import com.github.djlc.base64.LocationToBase64;
+import com.github.djlc.lists.PortableChestItemList;
 
 // 破壊してもアイテムを保持するチェスト
 public class PortableChest extends MyCraftableBlock {
@@ -22,11 +23,23 @@ public class PortableChest extends MyCraftableBlock {
 	private static final String INVENTORY = "inventory";
 
 	// インベントリ
-	private Inventory inventory = Bukkit.createInventory(null, INVENTORY_SIZE, TITLE);
+	private Inventory inventory = null;
 
 	// コンストラクタ
 	public PortableChest(ItemStack itemStack, Location location) {
 		super(itemStack, location);
+		inventory = Bukkit.createInventory(null, INVENTORY_SIZE, TITLE);
+	}
+
+	public PortableChest(ItemStack itemStack, Location location, String id) {
+		super(itemStack, location);
+		this.inventory = (PortableChestItemList.contains(id)) ? PortableChestItemList.get(id)
+				: Bukkit.createInventory(null, INVENTORY_SIZE, TITLE);
+	}
+
+	private PortableChest(ItemStack itemStack, Location location, Inventory inventory) {
+		super(itemStack, location);
+		this.inventory = inventory;
 	}
 
 	@Override
@@ -42,10 +55,10 @@ public class PortableChest extends MyCraftableBlock {
 		ItemStack itemStack = ItemStackToBase64.decode((String) map.get(ITEMSTACK));
 		Location location = LocationToBase64.decode((String) map.get(LOCATON));
 		Inventory inventory = InventoryToBase64.decode((String) map.get(INVENTORY));
-		
+
 		PortableChest instance = new PortableChest(itemStack, location);
 		instance.inventory = inventory;
-		
+
 		return instance;
 	}
 

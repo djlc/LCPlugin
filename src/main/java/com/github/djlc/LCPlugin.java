@@ -8,7 +8,6 @@ import com.github.djlc.blocks.LevelingTNT;
 import com.github.djlc.blocks.PortableChest;
 import com.github.djlc.command.Cube;
 import com.github.djlc.command.GetItemInfo;
-import com.github.djlc.items.CustomItem;
 import com.github.djlc.listeners.LevelingTNTListener;
 import com.github.djlc.listeners.MyCraftableBlockListener;
 import com.github.djlc.listeners.PortableChestListener;
@@ -25,7 +24,6 @@ public final class LCPlugin extends JavaPlugin {
 	public void onEnable() {
 
 		// Serializable Class
-		ConfigurationSerialization.registerClass(CustomItem.class);
 		ConfigurationSerialization.registerClass(LevelingTNT.class);
 		ConfigurationSerialization.registerClass(PortableChest.class);
 
@@ -35,7 +33,7 @@ public final class LCPlugin extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new MyCraftableBlockListener(this), this);
 		getServer().getPluginManager().registerEvents(new RecipeListener(this), this);
 		getServer().getPluginManager().registerEvents(new LevelingTNTListener(), this);
-		getServer().getPluginManager().registerEvents(new PortableChestListener(), this);
+		getServer().getPluginManager().registerEvents(new PortableChestListener(this), this);
 
 		// onCommand
 		getCommand("cube").setExecutor(new Cube(this));

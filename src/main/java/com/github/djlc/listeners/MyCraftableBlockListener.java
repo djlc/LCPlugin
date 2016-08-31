@@ -1,10 +1,7 @@
 package com.github.djlc.listeners;
 
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 
@@ -19,23 +16,6 @@ public class MyCraftableBlockListener implements Listener {
 	// コンストラクタ
 	public MyCraftableBlockListener(LCPlugin plugin) {
 		this.plugin = plugin;
-	}
-
-	@EventHandler
-	public void onBlockBreak(BlockBreakEvent event) {
-		// 破壊したブロックの位置を取得
-		Location location = event.getBlock().getLocation();
-		if (!MyCraftableBlockList.contains(location)) {
-			return;
-		}
-
-		// 破壊したブロックをドロップ
-		event.setCancelled(true);
-		event.getBlock().setType(Material.AIR);
-		event.getPlayer().getWorld().dropItemNaturally(location, MyCraftableBlockList.get(location).getItemStack());
-
-		// ブロック登録解除
-		MyCraftableBlockList.remove(location);
 	}
 
 	@EventHandler
