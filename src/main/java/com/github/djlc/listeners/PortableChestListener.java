@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
@@ -33,6 +34,7 @@ public class PortableChestListener implements Listener {
 		this.plugin = plugin;
 	}
 
+	// チェストを置いたとき
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent event) {
 		// 置いたブロックの位置とアイテム情報を取得
@@ -54,6 +56,7 @@ public class PortableChestListener implements Listener {
 		}
 	}
 
+	// チェストを破壊したとき
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event) {
 		// 破壊したブロックの位置を取得
@@ -94,6 +97,7 @@ public class PortableChestListener implements Listener {
 		MyCraftableBlockList.remove(location);
 	}
 
+	// チェストを開いたとき
 	@EventHandler
 	public void onChestOpen(InventoryOpenEvent event) {
 		InventoryHolder ih = event.getInventory().getHolder();
@@ -109,6 +113,7 @@ public class PortableChestListener implements Listener {
 		}
 	}
 
+	// プラグインが有効化されたとき
 	@EventHandler
 	private void onPluginEnable(PluginEnableEvent event) throws IOException {
 		if (event.getPlugin().equals(plugin)) {
@@ -116,6 +121,7 @@ public class PortableChestListener implements Listener {
 		}
 	}
 
+	// プラグインが無効化されたとき
 	@EventHandler
 	public void onPluginDisable(PluginDisableEvent event) {
 		if (event.getPlugin().equals(plugin)) {

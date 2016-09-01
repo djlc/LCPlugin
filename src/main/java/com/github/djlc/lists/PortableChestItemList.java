@@ -3,6 +3,7 @@ package com.github.djlc.lists;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.bukkit.inventory.Inventory;
@@ -35,7 +36,12 @@ public class PortableChestItemList {
 	// データの読み込み
 	@SuppressWarnings("unchecked")
 	public static void loadData(LCPlugin plugin) throws IOException {
-		Map<String, String> data = (Map<String, String>)(plugin.getConfig().getMapList(KEY).get(0));
+		// リストの読み込み
+		List<Map<?, ?>> temp = plugin.getConfig().getMapList(KEY);
+		if (temp.isEmpty()) return;
+		
+		// リストの中身の読み込み
+		Map<String, String> data = (Map<String, String>) temp.get(0);
 		if (!data.isEmpty()) {
 			for (Map.Entry<String, String> e : data.entrySet()) {
 				map.put(e.getKey(), InventoryToBase64.decode(e.getValue()));
